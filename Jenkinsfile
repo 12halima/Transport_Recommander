@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'jenkins-pipeline', url: 'https://github.com/12halima/Transport_Recommender.git'
+                git branch: 'jenkins-pipeline', url: 'https://github.com/12halima/Transport_Recommender.git',credentialsId: 'github_path'
             }
         }
     }

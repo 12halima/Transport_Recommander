@@ -5,27 +5,29 @@ pipeline {
         JENKINS_MODE = "1"          // Limiter à quelques villes pour tests
         SPARK_HOME = "/opt/spark"   // Chemin Spark dans le conteneur
         PATH = "$SPARK_HOME/bin:$PATH"
+        VENV_PATH = "/opt/venv/bin" // chemin du virtualenv contenant papermill
     }
 
     stages {
         stage('Checkout Jenkinsfile') {
             steps {
-                // On récupère uniquement la branche du Jenkinsfile
                 git branch: 'jenkins-pipeline', url: 'https://github.com/12halima/Transport_Recommander/', credentialsId: 'githubPath'
             }
         }
 
         stage('Fetch Script from Main') {
             steps {
-                // On prend le script depuis la branche main sans changer de branche entière
                 sh 'git fetch origin main'
                 sh 'git checkout origin/main -- Process_GTFS-OSM/Network_Base.ipynb'
             }
         }
 
-        stage('Run PySpark Script') {
+        stage('Run Notebook with Papermill') {
             steps {
-                sh 'spark-submit Process_GTFS-OSM/Network_Base.ipynb'
+                // On utilise papermill depuis le venv pour exécuter le notebook
+                sh '''
+                $VENV_PATH/papermill Process_GTFS-OSM/Network_Base.ipynb Process_GTFS-OSM/Network_Base_output.ipynb
+                '''
             }
         }
     }

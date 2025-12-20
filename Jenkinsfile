@@ -31,8 +31,8 @@ pipeline {
                     . $VENV_DIR/bin/activate
 
                     papermill \
-                      jenkins/ci_network_processing.ipynb \
-                      jenkins/ci_network_processing_output.ipynb \
+                      Jenkins/ci_network_processing.ipynb \
+                      Jenkins/ci_network_processing_output.ipynb \
                       --kernel python3
                 '''
             }

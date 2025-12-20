@@ -20,23 +20,7 @@ pipeline {
             steps {
                 sh '''
                     git fetch origin main
-                    git checkout origin/main -- Jenkins/ci_network_processing.ipynb 
-                '''
-            }
-        }
-
-        stage('Setup Python env') {
-            steps {
-                sh '''
-                    python3 --version
-
-                    if [ ! -d "$VENV_DIR" ]; then
-                        python3 -m venv $VENV_DIR
-                    fi
-
-                    . $VENV_DIR/bin/activate
-                    pip install --upgrade pip
-                    pip install pandas papermill
+                    git checkout origin/main -- Jenkins/ci_network_processing.ipynb
                 '''
             }
         }
@@ -56,7 +40,7 @@ pipeline {
 
         stage('Archive Output Notebook') {
             steps {
-                archiveArtifacts artifacts: 'jenkins/*_output.ipynb',
+                archiveArtifacts artifacts: 'Jenkins/*_output.ipynb',
                                  fingerprint: true
             }
         }

@@ -42,28 +42,25 @@ pipeline {
         stage('Run CI Notebook with Papermill') {
             steps {
                 sh '''
-                    . $VENV_DIR/bin/activate
-
-                    papermill \
-                      Jenkins/ci_network_processing.ipynb \
-                      Jenkins/ci_network_processing_output.ipynb \
-                      --kernel python3
-                '''
-            }
-        }
-        stage('Run CI Notebook with Papermill') {
-            steps {
-                sh '''
+                    # Activer le virtualenv
                     . .venv_ci/bin/activate
-                    python3 -m pip install ipykernel
-                    python3 -m ipykernel install --user --name=venv_ci --display-name "Python (venv_ci)"
-                    papermill \
-                      Jenkins/ci_network_processing.ipynb \
-                      Jenkins/ci_network_processing_output.ipynb \
-                      --kernel venv_ci
+        
+                    # Installer ipykernel au cas où
+                    python3 -m pip install --upgrade pip
+                    python3 -m pip install ipykernel papermill pandas
+        
+                    # Option 1 : utiliser le kernel par défaut du venv
+                    python3 -m papermill \
+                        Jenkins/ci_network_processing.ipynb \
+                        Jenkins/ci_network_processing_output.ipynb
+        
+                    # Désactiver le venv après exécution
+                    deactivate
                 '''
             }
         }
+
+ 
 
 
         stage('Archive Output Notebook') {

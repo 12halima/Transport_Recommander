@@ -51,6 +51,20 @@ pipeline {
                 '''
             }
         }
+        stage('Run CI Notebook with Papermill') {
+            steps {
+                sh '''
+                    . .venv_ci/bin/activate
+                    python3 -m pip install ipykernel
+                    python3 -m ipykernel install --user --name=venv_ci --display-name "Python (venv_ci)"
+                    papermill \
+                      Jenkins/ci_network_processing.ipynb \
+                      Jenkins/ci_network_processing_output.ipynb \
+                      --kernel venv_ci
+                '''
+            }
+        }
+
 
         stage('Archive Output Notebook') {
             steps {
@@ -58,7 +72,7 @@ pipeline {
                                  fingerprint: true
             }
         }
-    }
+        
 
     post {
         failure {

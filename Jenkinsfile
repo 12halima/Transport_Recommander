@@ -20,7 +20,7 @@ pipeline {
             steps {
                 sh '''
                     git fetch origin main
-                    git checkout origin/main -- jenkins/ci_network_processing.ipynb
+                    git checkout origin/main -- Jenkins/ci_network_processing.ipynb 
                 '''
             }
         }

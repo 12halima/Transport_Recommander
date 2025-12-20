@@ -2,11 +2,8 @@ pipeline {
     agent any
 
     environment {
-        JENKINS_MODE = "1"
-        SPARK_HOME   = "/opt/spark"
-        PATH         = "/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
-        PYSPARK_PYTHON = "/opt/venv/bin/python"
-        PYSPARK_DRIVER_PYTHON = "/opt/venv/bin/python"
+        PYTHONUNBUFFERED = "1"
+        VENV_DIR = ".venv_ci"
     }
 
     stages {
@@ -19,22 +16,39 @@ pipeline {
             }
         }
 
-        stage('Fetch Notebook from Main') {
+        stage('Fetch CI Notebook from Main') {
             steps {
                 sh '''
                     git fetch origin main
-                    git checkout origin/main -- Process_GTFS-OSM/Network_Base.ipynb
+                    git checkout origin/main -- jenkins/ci_network_processing.ipynb
                 '''
             }
         }
 
-        stage('Run Notebook with Papermill') {
+        stage('Setup Python env') {
             steps {
                 sh '''
+                    python3 --version
+
+                    if [ ! -d "$VENV_DIR" ]; then
+                        python3 -m venv $VENV_DIR
+                    fi
+
+                    . $VENV_DIR/bin/activate
+                    pip install --upgrade pip
+                    pip install pandas papermill
+                '''
+            }
+        }
+
+        stage('Run CI Notebook with Papermill') {
+            steps {
+                sh '''
+                    . $VENV_DIR/bin/activate
+
                     papermill \
-                      Process_GTFS-OSM/Network_Base.ipynb \
-                      Process_GTFS-OSM/Network_Base_output.ipynb \
-                      -p JENKINS_MODE 1 \
+                      jenkins/ci_network_processing.ipynb \
+                      jenkins/ci_network_processing_output.ipynb \
                       --kernel python3
                 '''
             }
@@ -42,7 +56,7 @@ pipeline {
 
         stage('Archive Output Notebook') {
             steps {
-                archiveArtifacts artifacts: 'Process_GTFS-OSM/*_output.ipynb',
+                archiveArtifacts artifacts: 'jenkins/*_output.ipynb',
                                  fingerprint: true
             }
         }
@@ -50,10 +64,10 @@ pipeline {
 
     post {
         failure {
-            echo "Pipeline échoué. Le notebook a crashé, pas Jenkins."
+            echo "Pipeline échoué. La logique CI est fausse, Jenkins va bien."
         }
         success {
-            echo "Notebook exécuté avec succès. Jenkins peut respirer."
+            echo "CI validée. Logique métier OK, prod peut dormir."
         }
     }
 }

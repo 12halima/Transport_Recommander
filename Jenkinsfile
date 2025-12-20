@@ -7,6 +7,7 @@ pipeline {
     }
 
     stages {
+    
 
         stage('Checkout Jenkinsfile') {
             steps {
@@ -59,16 +60,13 @@ pipeline {
                 '''
             }
         }
-
- 
-
-
         stage('Archive Output Notebook') {
             steps {
                 archiveArtifacts artifacts: 'Jenkins/*_output.ipynb',
                                  fingerprint: true
             }
         }
+    }
         
 
     post {

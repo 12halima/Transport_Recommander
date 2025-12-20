@@ -1,0 +1,3 @@
+stop_id,stop_code,stop_name,stop_lat,stop_lon,location_type,stop_timezone,wheelchair_boarding
+puente bizkaia - las arenas,,las arenas (puente bizkaia),43.3235713,-3.0163488,0,europe/madrid,0
+puente bizkaia - portugalete,,portugalete (puente bizkaia),43.322816,-3.017981,0,europe/madrid,0

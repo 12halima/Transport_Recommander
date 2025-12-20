@@ -1,0 +1,27 @@
+stop_id,stop_code,stop_name,stop_lat,stop_lon,location_type,stop_timezone,wheelchair_boarding
+pereña,,pereña,41.24,-6.5242,0,europe/madrid,0
+villarino,,villarino,41.2692,-6.4692,0,europe/madrid,0
+cabeza_framontanos,,cabeza de framontanos,41.215,-6.4378,0,europe/madrid,0
+trabanca,,trabanca,41.2331,-6.3847,0,europe/madrid,0
+almendra,,almendra,41.2297,-6.3411,0,europe/madrid,0
+sardon,,sardón de los frailes,41.2119,-6.2708,0,europe/madrid,0
+monleras,,monleras,41.1858,-6.2269,0,europe/madrid,0
+villaseco,,villaseco de los reyes,41.15,-6.1831,0,europe/madrid,0
+mazán,,mazán,41.135,-6.1406,0,europe/madrid,0
+moscosa,,moscosa,40.8833,-6.1167,0,europe/madrid,0
+campo_led,,campo de ledesma,40.9797,-5.4114,0,europe/madrid,0
+parada_led,,parada de ledesma,41.0875,-6.0,0,europe/madrid,0
+salamanca,,salamanca,40.9703,-5.675,0,europe/madrid,0
+villar_samaniego,,villar de samaniego,41.1169,-6.4333,0,europe/madrid,0
+robledo_hermoso,,robledo hermoso,41.1078,-6.4197,0,europe/madrid,0
+ahigal,,ahigal,40.8753,-6.7478,0,europe/madrid,0
+brincones,,brincones,41.1117,-6.3492,0,europe/madrid,0
+iruelos,,iruelos,41.14,-6.3289,0,europe/madrid,0
+el_manzano,,el manzano,41.1742,-6.2878,0,europe/madrid,0
+monleras_hijuelas,,monleras,41.1858,-6.2269,0,europe/madrid,0
+villar_ciervo,,villar de ciervo,40.7336,-6.7333,0,europe/madrid,0
+villar_yegua,,villar de la yegua,40.7169,-6.7,0,europe/madrid,0
+serranillo,,serranillo,40.7028,-6.6697,0,europe/madrid,0
+castillejo,,castillejo martin viejo,40.7006,-6.6458,0,europe/madrid,0
+saelices,,saelices el chico,40.6683,-6.6342,0,europe/madrid,0
+ciudad_rodrigo,,ciudad rodrigo - estación de autobuses,40.6086,-6.5306,0,europe/madrid,0

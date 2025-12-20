@@ -1,0 +1,37 @@
+stop_id,stop_code,stop_name,stop_lat,stop_lon,location_type,stop_timezone,wheelchair_boarding
+esbcn,,barcellona,41.3722839925891,2.17838299981634,0,europe/madrid,0
+esvlc,,valencia,39.4403612162965,-0.337931391547199,0,europe/madrid,0
+fraja,,ajaccio,41.9023472020499,8.81115601966423,0,europe/madrid,0
+frbia,,bastia,42.7020338783316,9.451694798857408,0,europe/madrid,0
+frbon,,bonifacio,41.3892049999134,9.16535499951473,0,europe/madrid,0
+frmrs,,marsiglia,43.3042879994355,5.36407499978494,0,europe/madrid,0
+frnce,,nice,43.6488327371235,7.13533324788991,0,europe/madrid,0
+frprp,,propriano,41.6773990003085,8.89853600014111,0,europe/madrid,0
+frpvo,,porto vecchio,41.5875202266901,9.25398464522601,0,europe/madrid,0
+frtln,,tolone,43.3323401432506,6.19011489647816,0,europe/madrid,0
+itatx,,arbatax,39.93899385649037,9.708022576260571,0,europe/madrid,0
+itcag,,cagliari,39.213259292018805,9.105379374339044,0,europe/madrid,0
+itclf,,carloforte,39.14536757060777,8.307690674563391,0,europe/madrid,0
+itcls,,calasetta,39.11196813106475,8.372707462630538,0,europe/madrid,0
+itcta,,catania,37.4915762,15.0918573,0,europe/madrid,0
+itcvv,,civitavecchia,42.0982220002809,11.781094999686,0,europe/madrid,0
+itgai,,golfo aranci,40.99521884267832,9.625668831740192,0,europe/madrid,0
+itgoa,,genova,44.411405000188,8.91557300020585,0,europe/madrid,0
+itisn,,asinara,41.0609580000795,8.29403400025795,0,europe/madrid,0
+itliv,,livorno,43.549994000336,10.3004550001881,0,europe/madrid,0
+itmda,,la maddalena,41.21212583198746,9.405830465763488,0,europe/madrid,0
+itnap,,napoli,40.8410219988677,14.2609190009997,0,europe/madrid,0
+itolb,,olbia,40.92382150774183,9.51898177812601,0,europe/madrid,0
+itpau,,palau,41.18088862355793,9.385375586568896,0,europe/madrid,0
+itpio,,piombino,42.9314010001806,10.5086339995374,0,europe/madrid,0
+itpmo,,palermo,38.1290879992713,13.3662410008546,0,europe/madrid,0
+itpto,,porto torres,40.83899498636864,8.400983513895286,0,europe/madrid,0
+itpve,,portovesme,39.199042051347135,8.39076472893844,0,europe/madrid,0
+itste,,santa teresa di gallura,41.23866968523399,9.193460723287435,0,europe/madrid,0
+itsvn,,savona,44.3123498,8.4901713,0,europe/madrid,0
+ittps,,trapani,38.010644000248,12.5101320003094,0,europe/madrid,0
+itvdl,,vado ligure,44.2600769995917,8.45522399947553,0,europe/madrid,0
+matng,,tangeri,35.78928874574407,-5.803751351906152,0,europe/madrid,0
+ittri,,termini imerese,37.986217960337015,13.70422189599734,0,europe/madrid,0
+tnlgn,,la goletta,36.812510624700586,10.303346294676102,0,europe/madrid,0
+itsal,,salerno,40.67808761204457,14.761684770659622,0,europe/madrid,0

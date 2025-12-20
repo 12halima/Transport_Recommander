@@ -24,7 +24,21 @@ pipeline {
                 '''
             }
         }
+        stage('Setup Python env') {
+            steps {
+                sh '''
+                    python3 --version
 
+                    if [ ! -d "$VENV_DIR" ]; then
+                        python3 -m venv $VENV_DIR
+                    fi
+
+                    . $VENV_DIR/bin/activate
+                    pip install --upgrade pip
+                    pip install pandas papermill
+                '''
+            }
+        }
         stage('Run CI Notebook with Papermill') {
             steps {
                 sh '''

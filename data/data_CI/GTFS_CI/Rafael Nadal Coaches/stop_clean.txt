@@ -1,0 +1,4 @@
+stop_id,stop_code,stop_name,stop_lat,stop_lon,location_type,stop_timezone,wheelchair_boarding
+s1,,inicio - autocares r-nadal,39.685167,2.699056,0,europe/madrid,0
+s2,,parada nº5,39.675667,2.679361,0,europe/madrid,0
+s3,,terminal - final de linea,39.604972,2.654917,0,europe/madrid,0

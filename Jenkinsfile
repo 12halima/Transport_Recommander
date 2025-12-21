@@ -22,46 +22,51 @@ pipeline {
         stage('Setup Python env') {
             steps {
                 sh '''
-                    python3 --version
-                    # Créer le venv si n'existe pas
-                    if [ ! -d "$VENV_DIR" ]; then
-                        python3 -m venv $VENV_DIR
-                    fi
-                    # Activer venv et installer dépendances
-                    . $VENV_DIR/bin/activate
-                    pip install --upgrade pip
-                    pip install papermill pandas ipykernel
+                python3 --version
+                if [ ! -d "$VENV_DIR" ]; then
+                    python3 -m venv $VENV_DIR
+                fi
+                . $VENV_DIR/bin/activate
+                pip install --upgrade pip
+                pip install papermill pandas ipykernel
                 '''
             }
         }
 
-        stage('Run CI Notebook with Papermill') {
+        stage('Run CI data generation') {
             steps {
                 sh '''
-                    # Activer le virtualenv
-                    . $VENV_DIR/bin/activate
-                    # Créer le dossier output si absent
-                    mkdir -p $OUTPUT_DIR
-                    # Exécuter le notebook avec Papermill
-                    python3 -m papermill $NOTEBOOK $OUTPUT_NOTEBOOK
+                . $VENV_DIR/bin/activate
+                mkdir -p $OUTPUT_DIR
+                python -m papermill \
+                  Jenkins/ci_network_processing.ipynb \
+                  $OUTPUT_DIR/ci_network_processing_output.ipynb
                 '''
             }
         }
 
-        stage('Archive Output Notebook') {
+        stage('Run CI data tests (pandas)') {
             steps {
-                archiveArtifacts artifacts: "${OUTPUT_DIR}/*_output.ipynb",
-                                 fingerprint: true
+                sh '''
+                . $VENV_DIR/bin/activate
+                mkdir -p $OUTPUT_DIR
+                python -m papermill \
+                  Jenkins/ci_edges_tests.ipynb \
+                  $OUTPUT_DIR/ci_edges_tests_output.ipynb
+                '''
             }
         }
     }
 
     post {
-        failure {
-            echo "Pipeline échoué. Vérifie les logs."
+        always {
+            archiveArtifacts artifacts: 'Jenkins/output/*.ipynb', fingerprint: true
         }
         success {
-            echo "Pipeline réussi. Notebook exécuté et archivé."
+            echo "✅ CI DATA VALIDÉE – logique métier OK"
+        }
+        failure {
+            echo "❌ CI DATA ÉCHOUÉE – assertions cassées"
         }
     }
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Hispabus AI - Ultra Fast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background: linear-gradient(rgba(243, 238, 231, 0.9), rgba(243, 238, 231, 0.9)), 
+                        url('https://upload.wikimedia.org/wikipedia/commons/e/ed/Mapa_de_Espa%C3%B1a_%28contorno%29.svg');
+            background-size: 70%; background-position: center; background-attachment: fixed; background-color: #f3eee7;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); border: 1px solid white; }
+        .timeline-horiz { position: relative; height: 2px; background: #cbd5e1; flex-grow: 1; margin: 0 15px; display: flex; align-items: center; justify-content: center; }
+        .timeline-horiz::before, .timeline-horiz::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; position: absolute; top: -3px; }
+        .timeline-horiz::before { left: 0; } .timeline-horiz::after { right: 0; }
+        .step-v { position: relative; padding-left: 25px; border-left: 2px dashed #cbd5e1; margin-left: 10px; padding-bottom: 15px; }
+        .step-v::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: #3b82f6; border-radius: 50%; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- PAGE 1 -->
+    <div id="p1" class="min-h-screen flex flex-col items-center justify-center text-center space-y-10">
+        <h1 class="text-7xl font-black text-slate-900 tracking-tighter italic">OptiTrajet <span class="text-blue-600">TR</span></h1>
+        <div class="glass p-12 rounded-[50px] shadow-2xl w-full max-w-xl space-y-6">
+            <select id="city" class="w-full p-6 bg-white rounded-3xl text-2xl font-bold shadow-sm outline-none cursor-pointer"></select>
+            <input type="time" id="time" value="10:30" class="w-full p-6 bg-white rounded-3xl text-2xl font-bold shadow-sm outline-none">
+            <button id="btnInit" class="w-full bg-blue-600 text-white p-6 rounded-3xl font-black text-2xl shadow-xl hover:bg-blue-700 transition-all">ANALYSER LE RÉSEAU</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="p2" class="hidden max-w-7xl mx-auto space-y-10">
+        <header class="flex justify-between items-center"><h2 class="text-2xl font-black">Hispabus <span class="text-blue-600">AI</span></h2><button onclick="location.reload()" class="text-slate-400 font-bold">← Retour</button></header>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- COLONNE GAUCHE : DÉPART -->
+            <div class="glass p-8 rounded-[40px] shadow-lg border border-white">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">1. Point de départ</label>
+                <div class="flex gap-2 mt-2">
+                    <input type="text" id="s_input" placeholder="Lieu de départ..." class="flex-1 p-4 rounded-2xl font-bold bg-slate-50 outline-none">
+                    <button id="btnSearch" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-black transition-all">🔍</button>
+                </div>
+                <div id="s_res" class="mt-6 flex flex-wrap gap-2 justify-center"></div>
+            </div>
+
+            <!-- COLONNE DROITE : ARRIVÉE -->
+            <div id="dest_box" class="glass p-8 rounded-[40px] shadow-lg border border-white opacity-50 pointer-events-none transition-all">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">2. Destination possible (+1h)</label>
+                <select id="t_select" class="w-full p-4 bg-slate-50 rounded-2xl font-bold outline-none mb-4 shadow-inner"></select>
+                <button id="btnFinal" class="w-full bg-emerald-500 text-white p-5 rounded-3xl font-black text-lg shadow-lg hover:bg-emerald-600">PROPOSER LES TRAJETS</button>
+            </div>
+        </div>
+
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20"></div>
+    </div>
+
+<script>
+    const API = "http://127.0.0.1:8000";
+    const ICONS = {0: "🚋", 1: "🚇", 2: "🚄", 3: "🚌", 4: "⛴️", "TRANS": "🔄"};
+    let sel_s_id = "";
+
+    window.onload = async () => {
+        const cities = await (await fetch(`${API}/get-cities`)).json();
+        document.getElementById('city').innerHTML = cities.map(c => `<option value="${c}">${c}</option>`).join('');
+    };
+
+    document.getElementById('btnInit').onclick = async () => {
+        document.getElementById('btnInit').innerText = "⏳ CHARGEMENT...";
+        await fetch(`${API}/init-session?city=${document.getElementById('city').value}&start_time=${document.getElementById('time').value}`);
+        document.getElementById('p1').classList.add('hidden');
+        document.getElementById('p2').classList.remove('hidden');
+    };
+
+    document.getElementById('btnSearch').onclick = async () => {
+        const data = await (await fetch(`${API}/search-stations?q=${document.getElementById('s_input').value}`)).json();
+        const container = document.getElementById('s_res');
+        container.innerHTML = "";
+        data.forEach(s => {
+            const btn = document.createElement('button');
+            btn.className = "bg-white border-2 border-blue-500 text-blue-600 px-4 py-2 rounded-xl font-bold shadow-sm hover:bg-blue-600 hover:text-white transition-all";
+            btn.innerText = s.name;
+            btn.onclick = () => { sel_s_id = s.id; loadT(s.id); };
+            container.appendChild(btn);
+        });
+    };
+
+    async function loadT(id) {
+        const data = await (await fetch(`${API}/get-reachable-targets?source_id=${id}`)).json();
+        const box = document.getElementById('dest_box');
+        box.classList.remove('opacity-50', 'pointer-events-none');
+        document.getElementById('t_select').innerHTML = data.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    }
+
+    document.getElementById('btnFinal').onclick = async () => {
+        const t_id = document.getElementById('t_select').value;
+        const res = await (await fetch(`${API}/recommend-multi?source_id=${sel_s_id}&target_id=${t_id}`)).json();
+        const grid = document.getElementById('grid');
+        grid.innerHTML = "";
+
+        res.forEach((opt, idx) => {
+            const card = document.createElement('div');
+            card.className = "glass p-8 rounded-[45px] shadow-xl border-2 border-white hover:scale-[1.02] transition-all cursor-pointer";
+            
+            let stepsHtml = opt.steps.map(s => `
+                <div class="step-v">
+                    <p class="text-[11px] font-black text-slate-800">${s.station || 'Station inconnue'}</p>
+                    <p class="text-[9px] font-bold text-slate-400">${s.dep.substring(0,5)} • Ligne ${s.ligne}</p>
+                    ${s.is_change ? '<span class="bg-red-100 text-red-500 text-[8px] px-2 py-0.5 rounded font-black mt-1 inline-block uppercase tracking-widest">🔄 Correspondance</span>' : ''}
+                </div>`).join('');
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3"><span class="text-4xl">${ICONS[opt.mode] || '🚌'}</span><h4 class="font-black text-slate-800 text-xl tracking-tighter">${opt.ligne}</h4></div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-center">
+                        <span class="text-[10px] font-bold text-slate-300 block uppercase">Départ</span>
+                        <span class="text-xl font-black text-slate-700">${opt.h_dep.substring(0,5)}</span>
+                    </div>
+                    <div class="timeline-horiz"><span class="absolute top-[-18px] font-black text-[10px] text-slate-400">${opt.duree} min</span></div>
+                    <div class="text-center">
+                        <span class="text-[10px] font-bold text-slate-300 block uppercase text-right">Arrivée</span>
+                        <span class="text-xl font-black text-blue-600">${opt.h_arr.substring(0,5)}</span>
+                    </div>
+                </div>
+                <p class="text-[10px] font-black text-slate-300 mt-6 text-center uppercase">Cliquez pour voir les ${opt.stops} arrêts</p>
+                <div id="det-${idx}" class="hidden mt-8 pt-6 border-t border-slate-100">${stepsHtml}</div>`;
+            
+            card.onclick = () => document.getElementById(`det-${idx}`).classList.toggle('hidden');
+            grid.appendChild(card);
+        });
+    };
+</script>
+</body>
+</html>
